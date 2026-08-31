@@ -1,6 +1,6 @@
-Resumed Discovery Notes 
+## Resumed Discovery Notes ##
 
-Proposal 
+** Proposal **
 
 What is a research opportunity?  
 
@@ -12,7 +12,7 @@ Who creates the proposal record?
 
 Who owns the proposal information?  
 
-Deadlines 
+** Deadlines **
 
 Who defines submission deadlines?  
 
@@ -34,7 +34,7 @@ What happens when information changes after a previous review?
 
 Does a change require previous approvals to be repeated?  
 
-Documents 
+** Documents **
 
 What documents are required?  
 
@@ -56,7 +56,7 @@ Can collaborators belong to external institutions?
 
 Who receives notifications?  
 
-Project monitoring 
+** Project monitoring **
 
 Who defines milestones?  
 
@@ -68,7 +68,7 @@ Which dates need to be monitored?
 
 How are overdue items identified?  
 
-Changes 
+** Changes **
 
 What constitutes an approved change?  
 
@@ -88,7 +88,7 @@ What determines authorization?
 
 Are external participants allowed access?  
 
-Reporting 
+** Reporting **
 
 Who needs reports?  
 
@@ -98,7 +98,7 @@ Which reports are operational and which are institutional?
 
 Who is authorized to access them?  
 
-Closure 
+** Closure **
 
 What evidence is required for project closure?  
 
@@ -112,11 +112,11 @@ What happens if evidence is missing?
 
  
 
-The Analysis We Have Based Our Work On. 
+# The Analysis We Have Based Our Work On. #
 
 The following analysis was used as a starting point to identify relevant questions, assumptions, and áreas that require further clarification before defining the detailed requirements and design of the solution. 
 
-1. Product Objectives Analysis 
+** 1. Product Objectives Analysis **
 
 Register Research Opportunities and Proposals 
 
@@ -124,7 +124,7 @@ What format should a research proposal have?
 
 What is a research opportunity?  
 
-Track Submission Deadlines 
+** Track Submission Deadlines **
 
 Who defines the deadlines?  
 
@@ -138,7 +138,7 @@ Should documents that have been changed at an earlier phase be reviewed again?
 
 If a document is changed, does that affect the phases that depend on the changed information?  
 
-Manage Relevant Proposal Documents and Versions 
+** Manage Relevant Proposal Documents and Versions **
 
 What is considered a relevant document?  
 
@@ -146,29 +146,29 @@ Are all documents relevant?
 
 How do we manage version control for each document?  
 
-Identify Responsible Investigators and Collaborators 
+** Identify Responsible Investigators and Collaborators **
 
 Should responsible investigators have more focus than collaborators, or how should we manage this distinction?  
 
 Should important information be communicated to responsible investigators only, or also to collaborators?  
 
-Track Active-Project Milestones and Deliverables 
+** Track Active-Project Milestones and Deliverables **
 
 Who defines a milestone?  
 
 Who determines what deliverables a project should have?  
 
-Monitor Project Status and Important Dates 
+** Monitor Project Status and Important Dates **
 
 How do we handle project status?  
 
 How can we show that an important date is approaching?  
 
-Record Approved Changes 
+** Record Approved Changes **
 
 Should we keep all approved changes, even if one change overwrites another?  
 
-Support Appropriate Visibility and Confidentiality 
+** Support Appropriate Visibility and Confidentiality **
 
 How can we control visibility?  
 
@@ -178,7 +178,7 @@ What information is sensitive?
 
 Who should have access to it, and under what conditions?  
 
-Produce Operational and Institutional Reports 
+** Produce Operational and Institutional Reports **
 
 In what format should reports be produced?  
 
@@ -194,15 +194,15 @@ Should we specify every stage and manage the history based on this distinction?
 
  
 
-2. Additional Domain Considerations 
+# 2. Additional Domain Considerations #
 
-Project Duration 
+** Project Duration **
 
 Projects may last from six months to five years. 
 
 At least one semester, during which dates, deadlines, and other time limits must be managed.  
 
-Multiple Institutions 
+** Multiple Institutions **
 
 Some projects involve multiple institutions. 
 
@@ -212,13 +212,13 @@ Can collaborators be from other institutions?
 
 Can collaborators from other institutions access important information before the proposal is funded?  
 
-Multiple Technical and Financial Deliverables 
+** Multiple Technical and Financial Deliverables **
 
 A project may include several technical and financial deliverables. 
 
 This means that there is not necessarily only one document for each area.  
 
-Variable Approval Requirements 
+** Variable Approval Requirements **
 
 Some approvals depend on project type, sponsor, budget, or research activity. 
 
@@ -228,21 +228,21 @@ Approval processes may therefore vary depending on the characteristics of the pr
 
  
 
-3. Analysis of the Current Process 
+# 3. Analysis of the Current Process #
 
 The current process generally operates as follows: 
 
-1. A researcher identifies a funding opportunity. 
+** 1. A researcher identifies a funding opportunity. **
 
-2. The researcher informs the Research and Innovation Office. 
+** 2. The researcher informs the Research and Innovation Office. **
 
 Here we can see the first communication between the researcher and the Research and Innovation Office.  
 
-3. A proposal record may be created in a spreadsheet. 
+** 3. A proposal record may be created in a spreadsheet. **
 
 Who creates the proposal record: the researcher or the Research and Innovation Office?  
 
-4. The researcher prepares technical, administrative, and financial documents. 
+** 4. The researcher prepares technical, administrative, and financial documents. **
 
 Maybe this means that the researcher creates the proposal record in a spreadsheet.  
 
@@ -250,33 +250,33 @@ For traceability, maybe we should manage this information in different documents
 
 What is the authoritative source for each type of information?  
 
-5. The Research and Innovation Office reviews document completeness. 
+** 5. The Research and Innovation Office reviews document completeness. **
 
 The Research and Innovation Office is responsible for reviewing whether all required documents are present.  
 
 Who defines whether a document is valid?  
 
-6. The proposed budget is reviewed by financial personnel. 
+** 6. The proposed budget is reviewed by financial personnel. **
 
 Financial documents may be managed by financial personnel.  
 
 Who owns and maintains the financial documentation?  
 
-7. The academic unit may review resource commitments. 
+** 7. The academic unit may review resource commitments. **
 
 Does the academic unit review whether the technical and administrative documents are valid?  
 
-8. Compliance or ethics information may be required. 
+** 8. Compliance or ethics information may be required. **
 
 What compliance or ethics information may be required, and under what conditions?  
 
 Does this depend on the proposal type?  
 
-9. The institution authorizes submission. 
+** 9. The institution authorizes submission. **
 
 If all required reviews have been completed and the relevant departments have approved the documents, should the institution authorize the submission?  
 
-10. The proposal is submitted to the sponsor. 
+** 10. The proposal is submitted to the sponsor. **
 
 Who is the sponsor in this context?  
 
@@ -286,7 +286,7 @@ Based on the known constraints, there can be different sponsors and different ap
 
 Sponsor requirements and institutional policies may also change.  
 
-11. The sponsor may: 
+** 11. The sponsor may: **
 
 Reject the proposal.  
 
@@ -298,7 +298,7 @@ Place the proposal on a reserve list.
 
 Approve funding.  
 
-12. If funded, the university activates a research project. 
+** 12. If funded, the university activates a research project. **
 
 Final validation therefore depends on the sponsor.  
 
@@ -306,7 +306,7 @@ After the required institutional validations are completed, the proposal is subm
 
 If funding is approved, the university can activate the research project.  
 
-13. The project is monitored through milestones, reports, deadlines, and changes. 
+** 13. The project is monitored through milestones, reports, deadlines, and changes. **
 
 At this point, the entity becomes a project rather than only a proposal.  
 
@@ -318,6 +318,6 @@ What constitutes a significant change?
 
 What information must be retained when a change is approved?  
 
-14. The project is closed after required deliverables and administrative records are completed. 
+** 14. The project is closed after required deliverables and administrative records are completed. **
 
  
