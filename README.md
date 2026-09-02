@@ -26,7 +26,7 @@ In alignment with the Studio Handbook guidelines for 3-member teams, roles and r
 
 | Team Member | Role | Core Responsibilities |
 | :--- | :--- | :--- |
-| **Daniel Eduardo Cera Moran** | **Team Coordinator & Process Lead** | Internal team organization, meeting coordination, business process modeling (BPMN), stakeholder engagement, and discovery management. |
+| **Member 1** | **Team Coordinator & Process Lead** | Internal team organization, meeting coordination, business process modeling (BPMN), stakeholder engagement, and discovery management. |
 | **Member 2** | **Architecture & Design Lead** | System structural definition, UML/C4 modeling, component boundaries, and Architecture Decision Records (ADRs). |
 | **Member 3** | **Quality & Configuration Lead (QA/DevOps)** | Repository governance, artifact consistency, testing strategies, Definition of Done, and CI/CD pipelines. |
 
