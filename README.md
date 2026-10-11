@@ -1,3 +1,39 @@
+# DH-03 Evaluation 2 Submission Manifest
+
+```yaml
+project: DH-03 Research Proposal & Project Lifecycle
+milestone: Evaluation 2 - Architecture and Design Review
+entry_point: README.md
+architecture_document: docs/evaluation-2/architecture-and-design.md
+requirements: docs/evaluation-2/requirements-and-drivers.md
+views: docs/evaluation-2/views/
+decisions: docs/evaluation-2/adr/
+contracts: docs/evaluation-2/design/
+validation_plan: docs/evaluation-2/validation/test-plan.md
+traceability: docs/evaluation-2/traceability.md
+project_status: docs/evaluation-2/project-status.md
+```
+
+## Evaluation 2 Evidence Index
+
+This package decomposes the proposed architecture in [`docs/Propuesta Entregable 2.pdf`](docs/Propuesta%20Entregable%202.pdf) into reviewable, editable repository artifacts. The decisions remain **proposed**; the validation plan records the four priority proofs of concept as **NOT EXECUTED**.
+
+| Evidence | Artifact |
+| --- | --- |
+| Executive summary and architectural synthesis | [Architecture and design](docs/evaluation-2/architecture-and-design.md) |
+| Functional requirements and quality drivers | [Requirements and drivers](docs/evaluation-2/requirements-and-drivers.md) |
+| Six-part quality attribute scenarios | [Quality scenarios](docs/evaluation-2/quality-scenarios.md) |
+| Editable system diagrams | [Context](docs/evaluation-2/views/context-view.md) · [Container](docs/evaluation-2/views/container-view.md) · [Domain model](docs/evaluation-2/views/domain-model-view.md) |
+| Seven architecture decisions | [ADRs](docs/evaluation-2/adr/) |
+| Technical contracts and rules | [Design](docs/evaluation-2/design/) |
+| Requirement-to-architecture mapping | [Traceability](docs/evaluation-2/traceability.md) |
+| Open evidence, risks, and backlog | [Project status](docs/evaluation-2/project-status.md) |
+| PoC specifications and current findings | [Test plan](docs/evaluation-2/validation/test-plan.md) · [Findings](docs/evaluation-2/validation/findings.md) |
+
+The source draft is retained under `docs/`; the files above are its structured, navigable architecture-review package. See [the Evaluation 2 index](docs/evaluation-2/README.md) for the complete artifact inventory.
+
+---
+
 # DH-03: Research Project and Grant Tracking System
 
 > **Client:** Research and Innovation Office, Horizon University  
