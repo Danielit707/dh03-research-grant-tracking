@@ -1,3 +1,17 @@
+# DH-03 Research Project and Grant Tracking System
+
+## Evaluation 3 — Increment 1
+
+The runnable implementation, setup instructions, automated tests, architectural traceability, evidence, and demo-video placeholder are in [evaluacion-3/](evaluacion-3/).
+
+Start with the [Evaluation 3 README](evaluacion-3/README.md). It documents the proposal-submission use case, SQLite persistence, demo authentication, seed data, run/test commands, and deferred work.
+
+## Evaluation 2 — Architecture and Design
+
+The proposed architecture and its seven decision records remain in [docs/evaluation-2/](docs/evaluation-2/README.md). Evaluation 3 implements a small, explicitly scoped slice of that architecture; it does not claim to validate every proposed decision or production integration.
+
+---
+
 # DH-03 Evaluation 2 Submission Manifest
 
 ```yaml
