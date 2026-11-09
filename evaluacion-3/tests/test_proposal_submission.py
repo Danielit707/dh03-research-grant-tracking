@@ -8,17 +8,30 @@ def complete_proposal(opportunity_id="opp-horizon-2027"):
     return {
         "opportunity_id": opportunity_id,
         "title": "Community solar storage pilot",
-        "sponsor": "Horizon Research Fund",
         "abstract": "Evaluate a synthetic community-scale energy storage design.",
         "requested_amount": 42500.0,
-        "deadline": (date.today() + timedelta(days=60)).isoformat(),
     }
+
+
+def upload_required_documents(client, auth, proposal_id):
+    requirements = client.get(
+        f"/proposals/{proposal_id}/documents", headers=auth()
+    ).json()
+    for requirement in requirements:
+        if requirement["required"] and not requirement["uploaded"]:
+            response = client.post(
+                f"/proposals/{proposal_id}/documents/{requirement['requirement_id']}",
+                headers=auth(),
+                files={"file": ("synthetic-evidence.pdf", b"%PDF-1.7\n1 0 obj\n<<>>\nendobj\n%%EOF", "application/pdf")},
+            )
+            assert response.status_code == 201, response.text
 
 
 def test_submission_persists_exact_version_audit_and_outbox(client, auth, database):
     created = client.post("/proposals", headers=auth(), json=complete_proposal())
     assert created.status_code == 201
     proposal_id = created.json()["id"]
+    upload_required_documents(client, auth, proposal_id)
 
     submitted = client.post(
         f"/proposals/{proposal_id}/submit",
@@ -98,14 +111,13 @@ def test_incomplete_submission_is_rejected_without_partial_state(client, auth, d
         headers=auth(),
         json={
             "expected_version": 0,
-            "sponsor": "Horizon Research Fund",
             "abstract": "A complete synthetic proposal description.",
             "requested_amount": 12000,
-            "deadline": (date.today() + timedelta(days=30)).isoformat(),
         },
     )
     assert repaired.status_code == 200
     assert repaired.json()["version"] == 1
+    upload_required_documents(client, auth, proposal_id)
     submitted = client.post(
         f"/proposals/{proposal_id}/submit",
         headers=auth(),
@@ -116,23 +128,12 @@ def test_incomplete_submission_is_rejected_without_partial_state(client, auth, d
     assert submitted.json()["version"] == 2
 
 
-def test_submission_rejects_expired_deadline(client, auth):
-    proposal = complete_proposal()
-    proposal["deadline"] = date.today().isoformat()
-    created = client.post("/proposals", headers=auth(), json=proposal)
-    proposal_id = created.json()["id"]
-
+def test_closed_or_expired_opportunity_cannot_be_applied_to(client, auth):
     response = client.post(
-        f"/proposals/{proposal_id}/submit",
-        headers=auth(),
-        json={"expected_version": 0},
+        "/proposals", headers=auth(), json=complete_proposal("opp-closed-deadline")
     )
-
-    assert response.status_code == 422
-    assert response.json()["error"]["code"] == "expired_deadline"
-    unchanged = client.get(f"/proposals/{proposal_id}", headers=auth()).json()
-    assert unchanged["status"] == "DRAFT"
-    assert unchanged["version"] == 0
+    assert response.status_code == 409
+    assert response.json()["error"]["code"] == "opportunity_closed"
 
 
 def test_pi_cannot_read_or_submit_another_pis_proposal(client, auth):
@@ -161,6 +162,7 @@ def test_coordinator_role_cannot_submit_as_a_pi(client, auth):
 
 def test_repeated_submission_is_rejected_as_invalid_transition(client, auth, database):
     proposal_id = "proposal-seed-alice"
+    upload_required_documents(client, auth, proposal_id)
     first = client.post(
         f"/proposals/{proposal_id}/submit",
         headers=auth(),
@@ -197,6 +199,7 @@ def test_repeated_submission_is_rejected_as_invalid_transition(client, auth, dat
 
 def test_concurrent_submissions_have_one_winner_and_one_stale_conflict(client, auth, database):
     proposal_id = "proposal-seed-alice"
+    upload_required_documents(client, auth, proposal_id)
 
     def submit():
         return client.post(

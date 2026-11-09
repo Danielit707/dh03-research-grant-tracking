@@ -1,5 +1,4 @@
 from datetime import date
-import math
 from typing import Any
 
 
@@ -14,7 +13,7 @@ class DomainError(Exception):
 def validate_submission(proposal: dict[str, Any]) -> None:
     missing = [
         name
-        for name in ("title", "sponsor", "abstract", "requested_amount", "deadline")
+        for name in ("title", "sponsor", "abstract", "deadline")
         if proposal.get(name) is None
         or (isinstance(proposal.get(name), str) and not proposal[name].strip())
     ]
@@ -22,14 +21,6 @@ def validate_submission(proposal: dict[str, Any]) -> None:
         raise DomainError(
             "incomplete_proposal",
             f"Missing required fields: {', '.join(missing)}",
-            422,
-        )
-
-    amount = proposal["requested_amount"]
-    if not math.isfinite(amount) or amount <= 0:
-        raise DomainError(
-            "invalid_requested_amount",
-            "requested_amount must be a finite value greater than zero",
             422,
         )
 
