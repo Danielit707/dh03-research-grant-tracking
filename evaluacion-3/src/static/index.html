@@ -1,0 +1,326 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Research Project and Grant Tracking System | Horizon Research</title>
+  <style>
+  :root {
+    color-scheme: dark;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #171821;
+    color: #eeeaf2;
+    --canvas: #1b1c25;
+    --surface: #24252f;
+    --raised: #30313d;
+    --line: #41414d;
+    --text: #eeeaf2;
+    --muted: #aaa8b5;
+    --jade: #c2a8ff;
+    --jade-deep: #7056b8;
+    --gold: #e6b77a;
+    --rose: #f09a9b;
+    --green: #a8d6b8;
+    --serif: Georgia, "Times New Roman", serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; min-height: 100%; background: var(--canvas); color: var(--text); }
+  body { font-size: 15px; line-height: 1.55; }
+  button, input, textarea, select { font: inherit; }
+  button { color: inherit; }
+  a { color: var(--jade); }
+  .topbar {
+    min-height: 82px; padding: 0 clamp(22px, 5vw, 76px); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center;
+    gap: 24px; background: #22232d; border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: center; gap: 13px; font-weight: 700; letter-spacing: -.02em; }
+  .mark { width: 39px; height: 39px; border-radius: 13px 13px 13px 4px; display: grid; place-items: center; color: #211a30; background: var(--jade); font-family: var(--serif); font-size: 22px; }
+  .brand small { display: none; }
+  .masthead-title { max-width: 610px; margin: 0; color: #f4efff; font: 500 clamp(20px, 1.8vw, 27px)/1.15 var(--serif); letter-spacing: -.025em; text-align: center; }
+  .account { display: flex; justify-self: end; align-items: center; gap: 12px; color: var(--muted); font-size: 13px; }
+  .account select { min-width: 225px; }
+  main { width: min(1480px, calc(100% - 64px)); margin: 24px auto 88px; }
+  .eyebrow { color: var(--jade); font-size: 13px; letter-spacing: .045em; margin-bottom: 8px; }
+  .heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin: 0 0 28px; }
+  .heading h1 { margin: 0; font: 500 clamp(34px, 4vw, 52px)/1.08 var(--serif); letter-spacing: -.035em; }
+  .heading p { max-width: 650px; margin: 11px 0 0; color: var(--muted); font-size: 16px; }
+  .refresh, .account select, .pagination button, .secondary {
+    border: 1px solid #4a4858; border-radius: 7px; padding: 10px 13px; background: #292a35; color: var(--text);
+  }
+  .refresh { cursor: pointer; white-space: nowrap; }
+  .refresh:hover, .secondary:hover, .pagination button:not(:disabled):hover { border-color: var(--jade); background: #343044; }
+  .demo-banner { margin: 0 0 17px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; border: 1px solid #66513f; border-left: 4px solid var(--gold); border-radius: 5px; background: #302820; color: #eadcc8; font-size: 13px; }
+  .demo-banner strong { padding: 4px 7px; border-radius: 3px; background: var(--gold); color: #282018; font-size: 11px; letter-spacing: .1em; }
+  .page-tabs { display: flex; gap: 30px; border-bottom: 1px solid var(--line); margin-bottom: 28px; }
+  .page-tab { padding: 12px 0 14px; border: 0; border-bottom: 2px solid transparent; background: transparent; color: var(--muted); font-weight: 650; cursor: pointer; }
+  .page-tab.active { color: var(--jade); border-color: var(--jade); }
+  .flow-guide { display: none; }
+  .flow-item { display: inline-flex; align-items: center; gap: 10px; color: #d0cbd8; font-size: 12px; white-space: nowrap; }
+  .flow-item i { color: var(--jade); font: 12px var(--serif); font-style: normal; }
+  .flow-line { flex: 1 1 40px; height: 1px; background: #4b625f; }
+  .opportunity-panel, .panel { min-width: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; padding: 0; }
+  #opportunity-subtitle { display: none; }
+  .panel-head { display: flex; align-items: end; justify-content: space-between; gap: 20px; padding: 4px 0 18px; border-bottom: 1px solid var(--line); }
+  .panel-head h2, .section h3, .review-top h3 { margin: 0; font-size: 15px; font-weight: 650; }
+  .panel-head .sub { margin-top: 4px; color: var(--muted); font-size: 13px; }
+  .count { color: var(--jade); font-size: 14px; font-variant-numeric: tabular-nums; }
+  .opportunity-list { padding: 0; }
+  .opportunity-card, .queue-card {
+    position: relative; display: grid; grid-template-columns: minmax(0, 1fr) 225px; gap: 8px 38px;
+    align-items: start; padding: 27px 8px 29px; border: 0; border-bottom: 1px solid var(--line);
+    border-radius: 0; background: transparent; box-shadow: none; margin: 0;
+  }
+  .opportunity-card:hover, .queue-card:hover { background: #21222c; }
+  .opportunity-card h3, .queue-card h3 { grid-column: 1; margin: 0; color: var(--text); font: 500 25px/1.18 var(--serif); letter-spacing: -.02em; }
+  .opportunity-card p, .queue-card p { grid-column: 1; max-width: 76ch; margin: 0; color: #c2bfcb; font-size: 14px; line-height: 1.65; }
+  .opportunity-card p:nth-of-type(2) { color: var(--muted); font-size: 12px; }
+  .queue-card .queue-meta { color: var(--muted); font-size: 12px; }
+  .queue-context { grid-column: 1; max-width: 76ch; }
+  .queue-context + .queue-context { margin-top: 3px; padding-top: 13px; border-top: 1px solid var(--line); }
+  .queue-context .context-label { display: block; margin-bottom: 3px; color: var(--jade); font-size: 11px; font-weight: 700; letter-spacing: .025em; }
+  .queue-context p { margin: 0; color: #c2bfcb; font-size: 13px; line-height: 1.6; }
+  .opportunity-meta { grid-column: 1; display: flex; flex-wrap: wrap; gap: 7px 20px; color: var(--muted); font-size: 12px; }
+  .opportunity-meta span:first-child { color: var(--green); }
+  .opportunity-card details { grid-column: 1; color: var(--muted); font-size: 12px; }
+  .opportunity-card summary { width: fit-content; color: var(--jade); cursor: pointer; }
+  .opportunity-card details ul { margin: 8px 0 0; padding-left: 18px; line-height: 1.8; }
+  .opportunity-card .primary { grid-column: 2; grid-row: 3; align-self: center; justify-self: stretch; }
+  .queue-card .primary { grid-column: 2; grid-row: 1 / span 4; align-self: center; justify-self: stretch; }
+  .opportunity-card .opportunity-meta { grid-column: 2; grid-row: 1 / 3; align-self: center; display: flex; flex-direction: column; gap: 2px; }
+  .opportunity-card .opportunity-meta span:last-child { color: var(--gold); font-size: 15px; }
+  .opportunity-card details { grid-row: 4; }
+  .no-opportunities { padding: 38px 0; color: var(--muted); }
+  .pagination { display: flex; align-items: center; gap: 14px; padding: 22px 8px; color: var(--muted); font-size: 13px; }
+  .pagination button { cursor: pointer; padding: 8px 12px; }
+  .pagination button:disabled { opacity: .42; cursor: default; }
+  .assignment-panel { margin-bottom: 34px; }
+  .layout { display: grid; grid-template-columns: minmax(270px, 30%) minmax(0, 1fr); align-items: start; gap: clamp(35px, 6vw, 94px); }
+  .layout > .panel:first-child { border-right: 1px solid var(--line); padding-right: clamp(20px, 3vw, 42px); }
+  .layout > .panel:first-child .panel-head { padding-top: 0; }
+  .layout > .panel:first-child .panel-head { flex-wrap: wrap; }
+  .layout > .panel:first-child .panel-head .refresh { font-size: 12px; padding: 8px 10px; }
+  .proposal-list { padding: 0; }
+  .proposal { display: block; width: 100%; padding: 18px 5px; margin: 0; text-align: left; color: var(--text); cursor: pointer; background: transparent; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; box-shadow: none; }
+  .proposal:hover, .proposal.active { background: #272731; box-shadow: inset 2px 0 var(--jade); padding-left: 13px; }
+  .proposal strong { display: block; margin: 0 0 7px; color: var(--text); font-size: 15px; line-height: 1.4; font-weight: 620; }
+  .proposal.active strong { color: var(--jade); }
+  .proposal .meta { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: var(--muted); font-size: 11px; }
+  .proposal .result-abstract { display: none; }
+  .detail { min-height: 50vh; padding: 5px 0 0; }
+  .detail-body { padding: 0 0 42px; }
+  .summary { display: flex; justify-content: space-between; align-items: start; gap: 28px; }
+  .summary h2 { margin: 0 0 8px; font: 500 clamp(28px, 3.2vw, 40px)/1.12 var(--serif); letter-spacing: -.025em; }
+  .summary .sub { color: var(--muted); font-size: 13px; }
+  .workflow-progress { display: grid; grid-template-columns: auto minmax(22px,1fr) auto minmax(22px,1fr) auto; align-items: center; gap: 11px; margin: 24px 0 4px; padding: 14px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .workflow-node { display: flex; align-items: center; gap: 8px; color: #8798a1; font-size: 11px; white-space: nowrap; }
+  .workflow-dot { width: 23px; height: 23px; display: grid; place-items: center; border: 1px solid #66757d; border-radius: 50%; color: #9aa8af; font-size: 10px; }
+  .workflow-node.done { color: #d2c3f5; }
+  .workflow-node.done .workflow-dot { border-color: var(--jade); background: var(--jade); color: #271c3d; }
+  .workflow-node.current { color: var(--text); font-weight: 650; }
+  .workflow-node.current .workflow-dot { border-color: var(--gold); color: var(--gold); box-shadow: 0 0 0 3px #e6b77a18; }
+  .workflow-connector { height: 1px; background: #43565e; }
+  .status-box { flex: 0 0 auto; min-width: 170px; display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+  .label { display: block; margin-bottom: 7px; color: var(--muted); font-size: 10px; letter-spacing: .075em; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; color: #ced9de; font-size: 12px; font-weight: 650; }
+  .pill.complete { color: var(--green); }
+  .pill.pending { color: var(--gold); }
+  .pill.changes { color: var(--rose); }
+  .section { margin-top: 26px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+  .field span { display: block; margin-bottom: 5px; color: var(--muted); font-size: 12px; }
+  .field strong { font-size: 14px; font-weight: 600; }
+  .proposal-context { display: grid; gap: 16px; max-width: 76ch; margin-top: 18px; color: #d0cbd8; font-size: 14px; line-height: 1.65; }
+  .proposal-context p { margin: 0; }
+  .context-part { display: grid; gap: 3px; }
+  .proposal-context.coordinator-context .context-part + .context-part { margin-top: 5px; padding-top: 15px; border-top: 1px solid var(--line); }
+  .proposal-context.coordinator-context .context-label { font-size: 12px; font-weight: 700; letter-spacing: .025em; }
+  .abstract-edit { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+  .abstract-edit textarea { min-height: 125px; margin-top: 5px; }
+  .abstract-edit-actions { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 10px; }
+  .context-label { color: var(--jade); font-size: 11px; }
+  .documents { display: grid; }
+  .document-item { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 14px 24px; align-items: center; padding: 19px 4px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; box-shadow: none; }
+  .document-item strong { font-size: 14px; font-weight: 620; }
+  .document-item p { margin: 5px 0 0; color: var(--muted); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
+  .file-picker { position: relative; display: inline-flex; min-width: 0; align-items: center; gap: 8px; cursor: pointer; }
+  .file-picker input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; padding: 0; opacity: 0; cursor: pointer; }
+  .file-picker-action { display: inline-flex; align-items: center; padding: 7px 9px; border: 1px solid #4e4a5b; border-radius: 5px; background: #243640; color: var(--text); font-size: 11px; white-space: nowrap; }
+  .file-picker-name { max-width: 132px; overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+  .doc-actions { display: flex; align-items: center; justify-content: flex-end; gap: 10px; flex-wrap: wrap; }
+  .doc-actions .upload-document { display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .text-button { padding: 5px 0; border: 0; background: transparent; color: var(--jade); cursor: pointer; font-size: 12px; }
+  .readonly { color: var(--muted); font-size: 13px; line-height: 1.6; }
+  .review-card { padding: 0 0 22px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; }
+  .review-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .review-card > p { color: var(--muted); font-size: 13px; }
+  .review-form { display: grid; grid-template-columns: 1fr 1fr minmax(180px, 1.4fr) auto; align-items: end; gap: 12px; margin-top: 16px; }
+  .review-form label { min-width: 0; }
+  input, textarea, select { width: 100%; padding: 10px 12px; border: 1px solid #4a4858; border-radius: 6px; background: #20212a; color: var(--text); font: inherit; font-size: 13px; }
+  input[type=file] { padding: 6px; }
+  textarea { min-height: 110px; resize: vertical; }
+  .primary { border: 0; border-radius: 6px; padding: 11px 15px; background: var(--jade-deep); color: #f0faf7; font-size: 12px; font-weight: 680; cursor: pointer; }
+  .primary:hover { background: #8469cf; }
+  .primary:disabled { cursor: default; opacity: .48; }
+  .secondary { cursor: pointer; }
+  .danger-action { display: block; margin: 12px 0 0 auto; padding: 7px 0; border: 0; background: transparent; color: var(--rose); font-size: 12px; cursor: pointer; }
+  .final-lock { max-width: 250px; margin: 10px 0 0 auto; color: var(--green); font-size: 12px; }
+  .submit-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 18px; color: var(--muted); font-size: 13px; }
+  .notice { margin: 12px 0; padding: 11px 0 11px 13px; border-left: 2px solid var(--gold); background: transparent; color: #e6c99f; font-size: 12px; }
+  .notice b { display: block; margin-bottom: 2px; }
+  .notice a { color: var(--jade); cursor: pointer; }
+  .notice.empty { border-left-color: var(--green); color: #a8d3b5; }
+  .timeline { display: grid; max-width: 850px; }
+  .event { position: relative; padding: 0 0 25px 19px; border-left: 1px solid #55496a; }
+  .event::before { position: absolute; left: -4px; top: 7px; width: 7px; height: 7px; border-radius: 50%; background: var(--jade); content: ""; }
+  .event strong { font-size: 13px; font-weight: 650; }
+  .event p { margin: 5px 0 0; color: var(--muted); font-size: 12px; }
+  .history-documents { margin-top: 8px; color: #d0cbd8; font-size: 12px; }
+  .history-documents ul { margin: 5px 0 0; padding-left: 18px; line-height: 1.65; }
+  .toast { position: fixed; right: 24px; bottom: 24px; z-index: 4; padding: 12px 17px; border-left: 3px solid var(--jade); background: #30283f; color: var(--text); box-shadow: 0 12px 40px #0005; font-size: 13px; display: none; }
+  .toast.show { display: block; }
+  .dialog-toast { position: static; width: 100%; margin-top: 10px; border-left-color: var(--gold); background: #3a2e22; box-shadow: none; }
+  .error { padding: 20px 0; color: var(--rose); }
+  .empty-state { min-height: 250px; display: grid; place-items: center; color: var(--muted); text-align: center; }
+  .empty-state .icon { margin-bottom: 9px; color: var(--jade); font-size: 26px; }
+  dialog { width: min(760px, calc(100vw - 28px)); max-height: 90vh; overflow: auto; padding: 0; border: 1px solid #4e4a5b; border-radius: 10px; background: #25252f; color: var(--text); box-shadow: 0 28px 90px #0009; }
+  dialog::backdrop { background: #101018d9; }
+  .dialog-head { position: sticky; top: 0; z-index: 1; display: flex; justify-content: space-between; gap: 20px; padding: 22px 26px 15px; border-bottom: 1px solid var(--line); background: #25252f; }
+  .dialog-head h2 { margin: 0; font: 500 28px/1.2 var(--serif); }
+  .dialog-head p, .create-documents > p, .create-document small { color: var(--muted); font-size: 12px; }
+  .close { border: 0; background: transparent; color: var(--muted); font-size: 24px; cursor: pointer; }
+  .create-form { display: grid; gap: 15px; padding: 20px 26px 26px; }
+  .create-form label, .create-document strong { color: var(--text); font-size: 13px; }
+  .create-documents { border-top: 1px solid var(--line); padding-top: 15px; }
+  .create-documents h3 { margin: 0; font-size: 14px; }
+  .create-document { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 12px 20px; align-items: center; padding: 13px 0; border-bottom: 1px solid var(--line); }
+  .create-document small { display: block; }
+  .dialog-actions { position: sticky; bottom: 0; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 9px; padding: 13px 0 0; background: #25252f; }
+  :focus-visible { outline: 2px solid var(--jade); outline-offset: 3px; }
+  @media (max-width: 1050px) {
+    .topbar { min-height: 96px; grid-template-columns: 1fr auto; gap: 4px 18px; padding-top: 10px; padding-bottom: 10px; }
+    .masthead-title { grid-column: 1 / -1; grid-row: 2; justify-self: center; max-width: 100%; font-size: 20px; }
+  }
+  @media (max-width: 900px) {
+    main { width: min(100% - 40px, 700px); margin-top: 32px; }
+    .layout { grid-template-columns: minmax(0, 1fr); gap: 22px; }
+    .layout > .panel:first-child { padding-right: 0; border-right: 0; }
+    .layout > .panel:first-child .panel-head { padding-top: 6px; }
+    .review-form { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 620px) {
+    .topbar { min-height: 74px; padding: 10px 16px; grid-template-columns: auto 1fr; gap: 4px 14px; }
+    .brand { min-width: 0; gap: 8px; font-size: 12px; }
+    .mark { width: 33px; height: 33px; border-radius: 11px 11px 11px 4px; }
+    .brand small { font-size: 10px; }
+    .masthead-title { grid-column: 1 / -1; grid-row: 2; max-width: none; font-size: 17px; text-align: left; }
+    .account { gap: 0; }
+    .account span { display: none; }
+    .account select { min-width: 0; max-width: min(155px, 38vw); padding: 8px; font-size: 11px; }
+    main { width: calc(100% - 32px); margin: 28px auto 56px; }
+    .heading { display: none; }
+    .demo-banner { align-items: center; gap: 8px; padding: 10px; font-size: 12px; }
+    .page-tabs { gap: 22px; }
+    .flow-guide { display: none; }
+    .flow-line { width: 1px; height: 11px; flex: 0 0 11px; margin-left: 11px; }
+    .opportunity-card, .queue-card { grid-template-columns: 1fr; gap: 9px; padding: 22px 5px; }
+    .opportunity-card h3, .queue-card h3, .opportunity-card p, .queue-card p, .opportunity-meta, .opportunity-card details { grid-column: 1; }
+    .opportunity-card .primary, .queue-card .primary { grid-column: 1; grid-row: auto; justify-self: start; margin-top: 5px; }
+    .opportunity-card .opportunity-meta { grid-column: 1; grid-row: auto; align-self: start; flex-direction: row; flex-wrap: wrap; gap: 6px 16px; }
+    .opportunity-card details { grid-row: auto; }
+    .summary { flex-direction: column; gap: 12px; }
+    .summary h2 { font-size: 32px; }
+    .abstract-edit-actions { align-items: flex-start; flex-direction: column; }
+    .workflow-progress { grid-template-columns: 1fr; gap: 7px; }
+    .workflow-connector { width: 1px; height: 10px; margin-left: 11px; }
+    .status-box { min-width: 0; align-items: flex-start; text-align: left; }
+    .danger-action { margin-left: 0; }
+    .fields { grid-template-columns: 1fr 1fr; gap: 17px; }
+    .document-item { grid-template-columns: 1fr; }
+    .doc-actions { justify-content: flex-start; }
+    .doc-actions .upload-document { flex-wrap: wrap; }
+    .file-picker-name { max-width: min(180px, 54vw); }
+    .review-form { grid-template-columns: 1fr; }
+    .submit-row { align-items: start; flex-direction: column; }
+    .create-document { grid-template-columns: 1fr; }
+    .dialog-actions { justify-content: stretch; }
+    .dialog-actions button { flex: 1 1 auto; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+  }
+</style>
+</head>
+<body>
+  <header class="topbar"><div class="brand"><div class="mark">H</div><div>Horizon Research<small>Research &amp; Innovation Office</small></div></div><h1 class="masthead-title">Research Project and Grant Tracking System</h1><div class="account"><select id="identity" aria-label="Cambiar identidad de demostración"><option value="demo-pi-alice">Alice Rivera · Investigadora principal</option><option value="demo-coordinator">Camila Torres · Coordinadora</option><option value="demo-coordinator-mateo">Mateo Rojas · Coordinador</option><option value="demo-pi-bob">Bob Chen · Investigador principal</option></select></div></header>
+  <main>
+    <div class="demo-banner"><strong>DEMO</strong><span>Identidades de prueba · sin autenticación de producción</span></div>
+    <nav class="page-tabs" aria-label="Secciones del sistema"><button class="page-tab active" id="tab-opportunities">Convocatorias</button><button class="page-tab" id="tab-proposals">Mis propuestas</button></nav>
+    <section id="opportunities-view"><section class="opportunity-panel"><div class="panel-head"><div><h2>Oportunidades abiertas</h2><div class="sub" id="opportunity-subtitle">Selecciona una convocatoria para preparar tu postulación.</div></div><span class="count" id="open-count">0</span></div><div class="opportunity-list" id="opportunities"></div><div class="pagination" id="opportunity-pagination"><button id="previous-page">Anterior</button><span id="page-label">Página 1 de 1</span><button id="next-page">Siguiente</button></div></section></section>
+    <section id="proposals-view" hidden><section class="opportunity-panel assignment-panel" id="assignment-panel" hidden><div class="panel-head"><div><h2>Propuestas enviadas a la oficina sin coordinador</h2><div class="sub">La coordinación puede tomar una propuesta para su revisión.</div></div><span class="count" id="unassigned-count">0</span></div><div class="opportunity-list" id="unassigned-proposals"></div></section>
+      <div class="layout"><section class="panel"><div class="panel-head"><div><h2 id="proposal-list-title">Mis propuestas</h2><div class="sub"><b id="proposal-count">0</b> registros</div></div><button class="refresh" id="back-to-calls">Ver convocatorias</button></div><div id="notices"></div><div class="proposal-list" id="proposals"></div></section><section class="panel detail" id="detail"><div class="empty-state"><div><div class="icon">◫</div>Selecciona una propuesta para ver su seguimiento.</div></div></section></div>
+    </section>
+  </main>
+  <dialog id="create-dialog" class="create-dialog"><div class="dialog-head"><div><h2>Preparar postulación</h2><p>Adjunta los documentos en este paso. Puedes guardar el borrador o enviarlo a revisión de la oficina.</p></div><button class="close" id="close-dialog" aria-label="Cerrar">×</button></div><form class="create-form" id="create-form"><label>Convocatoria<select name="opportunity_id" id="opportunity-select" required></select></label><label>Título de la propuesta<input name="title" required maxlength="200" placeholder="Nombre del proyecto de investigación"></label><label>Resumen<textarea name="abstract" required maxlength="5000" placeholder="Describe brevemente la propuesta"></textarea></label><div class="create-documents"><h3>Documentos de la propuesta</h3><p>Se muestran los documentos que son obligatorios para esta convocatoria.</p><div id="create-document-list"></div></div><div class="toast dialog-toast" id="dialog-toast" role="alert" aria-live="assertive"></div><div class="dialog-actions"><button type="button" class="secondary" id="cancel-create">Cancelar</button><button class="secondary" type="submit" name="action" value="save">Guardar borrador</button><button class="primary" type="submit" name="action" value="send">Enviar a revisión de la oficina</button></div></form></dialog>
+  <div class="toast" id="toast"></div>
+  <script>
+    const actorNames={"user-alice":"Alice Rivera","user-bob":"Bob Chen","user-coordinator":"Camila Torres","user-coordinator-2":"Mateo Rojas"};
+    const eventLabels={
+      "proposal.created":"Propuesta creada",
+      "proposal.updated":"Datos de la propuesta actualizados",
+      "proposal.document_uploaded":"Se actualizó un documento",
+      "proposal.document_upload_rejected":"Carga de documento rechazada",
+      "proposal.submitted":"Enviada a revisión de la oficina",
+      "proposal.coordinator_assigned":"Coordinador asignado",
+      "documents.verification_updated":"Revisión documental"
+    };
+    const verificationLabels={PENDING:"Pendiente",COMPLETE:"Documentos verificados",CHANGES_REQUIRED:"Requiere correcciones"};
+    const identity=document.querySelector('#identity');const stagedFiles=new Map();let selected=null;let proposals=[];let notices=[];let opportunities=[];let unassigned=[];let opportunityPage=1;const opportunityPageSize=6;let opportunityTotal=0;let opportunityTotalPages=1;
+    identity.value=localStorage.getItem('dh03-demo-token')||'demo-pi-alice';
+    function headers(){return {'Authorization':`Bearer ${identity.value}`,'Content-Type':'application/json'}}
+    function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
+    async function api(path,options={}){const requestHeaders={'Authorization':`Bearer ${identity.value}`};if(!(options.body instanceof FormData))requestHeaders['Content-Type']='application/json';const response=await fetch(path,{...options,headers:requestHeaders});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error?.message||`Error ${response.status}`);return body}
+    function badge(status){const cls=status==='COMPLETE'?'complete':status==='CHANGES_REQUIRED'?'changes':'pending';return `<span class="pill ${cls}">${verificationLabels[status]||status}</span>`}
+    function dateText(value){if(!value)return 'Sin fecha';return new Date(`${value}T12:00:00`).toLocaleDateString('es-CO',{day:'numeric',month:'short',year:'numeric'})}
+    function showPage(page){const calls=page==='opportunities';document.querySelector('#opportunities-view').hidden=!calls;document.querySelector('#proposals-view').hidden=calls;document.querySelector('#tab-opportunities').classList.toggle('active',calls);document.querySelector('#tab-proposals').classList.toggle('active',!calls);if(!calls&&proposals.length&&!selected)showDetail(proposals[0].id)}
+    async function load(){const isCoordinator=identity.value.startsWith('demo-coordinator');document.querySelector('#assignment-panel').hidden=!isCoordinator;document.querySelector('#proposal-list-title').textContent=isCoordinator?'Propuestas asignadas':'Mis propuestas';document.querySelector('#opportunity-subtitle').textContent=isCoordinator?'Convocatorias abiertas registradas en el sistema.':'Selecciona una convocatoria para preparar tu postulación.';try{const assignmentsPromise=isCoordinator?api('/coordinator-assignments'):Promise.resolve([]);[proposals,notices,unassigned]=await Promise.all([api('/proposals'),api('/notifications'),assignmentsPromise]);const pageData=await api(`/opportunities?page=${opportunityPage}&page_size=${opportunityPageSize}`);opportunities=pageData.items;opportunityTotal=pageData.total;opportunityTotalPages=pageData.total_pages;document.querySelector('#proposal-count').textContent=proposals.length;document.querySelector('#open-count').textContent=opportunityTotal;document.querySelector('#unassigned-count').textContent=unassigned.length;renderOpportunities();renderPagination();renderQueue();renderNotices(notices);renderList();if(selected&&proposals.some(p=>p.id===selected))await showDetail(selected);else if(proposals.length)await showDetail(proposals[0].id);else document.querySelector('#detail').innerHTML='<div class="empty-state"><div><div class="icon">⌕</div>No hay propuestas relacionadas con este usuario.</div></div>'}catch(error){document.querySelector('#proposals').innerHTML=`<div class="error">${esc(error.message)}</div>`}}
+    function renderNotices(items){const el=document.querySelector('#notices');el.innerHTML=items.length?items.map(n=>`<div class="notice"><b>${n.days_remaining<0?'Plazo vencido':n.days_remaining===0?'Vence hoy':'Próximo plazo'}</b>${esc(n.message)} · <a data-open="${esc(n.proposal_id)}">${esc(n.title||'Ver propuesta')}</a></div>`).join(''):'<div class="notice empty"><b>Sin alertas próximas</b>No tienes verificaciones documentales que venzan en los próximos 7 días.</div>';el.querySelectorAll('[data-open]').forEach(a=>a.onclick=()=>showDetail(a.dataset.open))}
+    function statusLabel(status){return status==='VERIFIED'?'Documentos verificados':status==='SUBMITTED'?'En revisión de oficina':'Borrador'}
+    function addWorkflowProgress(proposal){const stage=proposal.status==='VERIFIED'?4:proposal.status==='SUBMITTED'?3:2;const labels=['Oportunidad','Propuesta enviada','Documentos verificados'];const progress=document.createElement('div');progress.className='workflow-progress';progress.setAttribute('aria-label',`Etapa del flujo: ${statusLabel(proposal.status)}`);progress.innerHTML=labels.map((label,index)=>`<div class="workflow-node ${index+1<stage?'done':index+1===stage?'current':'upcoming'}"><span class="workflow-dot">${index+1<stage||proposal.status==='VERIFIED'?'✓':index+1}</span><span>${label}</span></div>${index<labels.length-1?'<span class="workflow-connector"></span>':''}`).join('');document.querySelector('#detail .summary')?.after(progress)}
+    function renderList(){const el=document.querySelector('#proposals');el.innerHTML=proposals.map(p=>`<button class="proposal ${p.id===selected?'active':''}" data-id="${esc(p.id)}"><strong>${esc(p.title||'Borrador sin título')}</strong><div class="meta"><span>${esc(p.opportunity_title||p.opportunity_id)}</span><span class="pill ${p.status==='VERIFIED'?'complete':''}">${statusLabel(p.status)}</span></div></button>`).join('');el.querySelectorAll('[data-id]').forEach(b=>b.onclick=()=>showDetail(b.dataset.id))}
+    function renderPagination(){const el=document.querySelector('#opportunity-pagination');el.hidden=opportunityTotalPages<=1;document.querySelector('#page-label').textContent=`Página ${opportunityPage} de ${opportunityTotalPages} · ${opportunityTotal} convocatorias`;document.querySelector('#previous-page').disabled=opportunityPage<=1;document.querySelector('#next-page').disabled=opportunityPage>=opportunityTotalPages}
+    function renderOpportunities(){const el=document.querySelector('#opportunities');el.innerHTML=opportunities.length?opportunities.map(o=>`<article class="opportunity-card"><h3>${esc(o.title)}</h3><p>${esc(o.description)}</p><p>Patrocinador: ${esc(o.sponsor)}</p><div class="opportunity-meta"><span>Convocatoria abierta</span><span>Fecha límite: ${dateText(o.deadline)}</span></div><details><summary>${o.required_document_count} documentos obligatorios · Ver requisitos</summary><ul>${(o.documents||[]).map(d=>`<li>${esc(d.name)} · Obligatorio en esta convocatoria</li>`).join('')}</ul></details>${identity.value.startsWith('demo-coordinator')?'':`<button class="primary apply-opportunity" data-opportunity="${esc(o.id)}">Preparar postulación</button>`}</article>`).join(''):'<div class="no-opportunities">No hay oportunidades abiertas en este momento.</div>';el.querySelectorAll('[data-opportunity]').forEach(button=>button.onclick=()=>openCreate(button.dataset.opportunity))}
+    function renderQueue(){const el=document.querySelector('#unassigned-proposals');el.innerHTML=unassigned.length?unassigned.map(p=>`<article class="queue-card"><h3>${esc(p.title||'Borrador sin título')}</h3><p class="queue-meta">${esc(p.opportunity_title)} · plazo ${dateText(p.deadline)}</p><div class="queue-context"><span class="context-label">Lo que busca la convocatoria</span><p>${esc(p.opportunity_description||'Sin descripción de la convocatoria.')}</p></div><div class="queue-context"><span class="context-label">Resumen de la propuesta</span><p>${esc(p.abstract||'Sin resumen de propuesta.')}</p></div><button class="primary assign-proposal" data-id="${esc(p.id)}">Asignármela</button></article>`).join(''):'<div class="no-opportunities">No hay propuestas enviadas pendientes de asignación.</div>';el.querySelectorAll('.assign-proposal').forEach(button=>button.onclick=async()=>{button.disabled=true;try{await api(`/proposals/${button.dataset.id}/coordinator-assignment`,{method:'POST'});toast('Propuesta asignada a tu bandeja');await load()}catch(error){toast(error.message);button.disabled=false}})}
+    function addProposalContext(proposal,verification){const summary=document.querySelector('#detail .summary .sub');if(!summary)return;summary.textContent=proposal.opportunity_title||proposal.opportunity_id;const context=document.createElement('div');context.className='proposal-context'+(identity.value.startsWith('demo-coordinator')?' coordinator-context':'');for(const [label,value,fallback] of [['Lo que pide la convocatoria',proposal.opportunity_description,'Sin descripción de oportunidad.'],['Resumen presentado por el investigador',proposal.abstract,'Sin resumen de propuesta.']]){const part=document.createElement('div');part.className='context-part';const title=document.createElement('span');title.className='context-label';title.textContent=label;const text=document.createElement('p');text.textContent=value||fallback;part.append(title,text);context.append(part)}summary.after(context);if(identity.value.startsWith('demo-pi')&&proposal.status==='DRAFT'&&verification.status==='CHANGES_REQUIRED'){const editor=document.createElement('form');editor.className='abstract-edit';editor.id='abstract-edit-form';editor.innerHTML=`<label class="field"><span>Ajustar resumen de la propuesta</span><textarea name="abstract" required maxlength="5000">${esc(proposal.abstract||'')}</textarea></label><div class="abstract-edit-actions"><span class="readonly">El cambio quedará registrado en el historial de la propuesta.</span><button class="primary">Guardar resumen</button></div>`;context.after(editor);editor.onsubmit=async event=>{event.preventDefault();const button=editor.querySelector('button');button.disabled=true;try{const abstract=editor.elements.abstract.value.trim();await api(`/proposals/${proposal.id}`,{method:'PATCH',body:JSON.stringify({expected_version:proposal.version,abstract})});toast('Resumen actualizado y registrado en el historial');await load()}catch(error){toast(error.message);button.disabled=false}}}}
+    function addProposalActions(proposal,verification){if(identity.value.startsWith('demo-pi')&&proposal.status!=='VERIFIED'){const button=document.createElement('button');button.type='button';button.className='danger-action';button.textContent='Eliminar propuesta y todo su historial';button.onclick=async()=>{if(!confirm('¿Eliminar esta propuesta? Se borrarán permanentemente sus documentos, versiones, revisiones, asignaciones y eventos.'))return;button.disabled=true;try{await api(`/proposals/${proposal.id}`,{method:'DELETE'});selected=null;toast('Propuesta e historial eliminados');await load()}catch(error){toast(error.message);button.disabled=false}};document.querySelector('#detail .status-box')?.append(button)}if(proposal.status==='VERIFIED'){document.querySelector('#detail .status-box')?.insertAdjacentHTML('beforeend','<p class="readonly final-lock">Documentos verificados. Esta etapa quedó cerrada: ya no se puede modificar ni eliminar la propuesta.</p>')}if(proposal.status==='DRAFT'&&verification.status==='CHANGES_REQUIRED'){const form=document.querySelector('#review-form');if(form)form.outerHTML='<p class="readonly">Devuelta al investigador para ajustes. Puede actualizar los archivos y reenviar esta misma propuesta.</p>'}}
+    function renderAuditEvent(event){
+      const d=event.details||{};
+      const title=eventLabels[event.event_type]||event.event_type.replaceAll('.',' · ');
+      const who=actorNames[event.actor_id]||event.actor_id;
+      const parts=[];
+      if(event.event_type==='documents.verification_updated'&&(d.previous_status||d.status)){
+        const from=d.previous_status?verificationLabels[d.previous_status]||d.previous_status:null;
+        const to=verificationLabels[d.status]||d.status;
+        parts.push(`<p><b>Qué cambió:</b> ${from?`${esc(from)} → ${esc(to)}`:esc(to||'')}</p>`);
+      }
+      if(d.changes){
+        const lines=Object.entries(d.changes).map(([field,change])=>`${esc(field)}: ${esc(change.from??'vacío')} → ${esc(change.to??'vacío')}`);
+        if(lines.length) parts.push(`<p><b>Qué cambió:</b> ${lines.join(' · ')}</p>`);
+      }
+      if(d.requirement_name){
+        parts.push(`<p><b>Qué cambió:</b> ${esc(d.requirement_name)} · ${esc(d.filename||'')} · ${d.previous_version?`v${esc(d.previous_version)} → `:''}v${esc(d.version)}</p>`);
+      }
+      const why=d.notes||d.reason;
+      if(why) parts.push(`<p><b>Por qué:</b> ${esc(why)}</p>`);
+      const documents=Array.isArray(d.documents)?`<div class="history-documents"><b>Documentos en este momento</b><ul>${d.documents.map(item=>`<li>${esc(item.name||item.requirement_name)}: ${item.document_id?`${esc(item.filename||'archivo')} · v${esc(item.version)}`: 'Faltante en ese momento'}</li>`).join('')}</ul></div>`:'';
+      return `<div class="event"><strong>${esc(title)}</strong><p>${new Date(event.occurred_at).toLocaleString('es-CO')} · ${esc(who)}</p>${parts.join('')}${documents}</div>`;
+    }
+    async function showDetail(id){selected=id;renderList();const p=await api(`/proposals/${id}`);const [verification,audit,documents]=await Promise.all([api(`/proposals/${id}/document-verification`),api(`/proposals/${id}/audit`),api(`/proposals/${id}/documents`)]);const coordinator=identity.value.startsWith('demo-coordinator');const isPi=identity.value.startsWith('demo-pi');const status=verification.status==='COMPLETE'||p.status==='VERIFIED'?'VERIFIED':p.status;const locked=status==='VERIFIED';const missing=documents.filter(d=>d.required&&!d.uploaded);const history=audit.slice().reverse().map(renderAuditEvent).join('')||'<p class="readonly">Aún no hay eventos.</p>';const documentItems=documents.map(d=>`<article class="document-item"><div><strong>${esc(d.name)} ${d.required?'<span class="pill pending">Obligatorio</span>':'<span class="pill">Opcional</span>'}</strong><p>${esc(d.description)} · máximo ${Math.round(d.max_size_bytes/1024/1024)} MB · PDF</p>${d.uploaded?`<p>Subido: ${esc(d.filename)} · v${d.version} · SHA-256 ${esc(d.content_sha256.slice(0,12))}…</p>`:'<p>Pendiente de cargar</p>'}</div><div class="doc-actions">${d.uploaded?`<button class="text-button download-document" data-document="${esc(d.document_id)}" data-filename="${esc(d.filename)}">Descargar</button>`:''}${isPi&&status==='DRAFT'&&!locked?`<form class="upload-document" data-requirement="${esc(d.requirement_id)}"><label class="file-picker"><input type="file" name="file" accept=".pdf,application/pdf" required><span class="file-picker-action">Seleccionar PDF</span><span class="file-picker-name">Ningún archivo</span></label><button class="primary">${d.uploaded?'Subir nueva versión':'Subir PDF'}</button></form>`:''}</div></article>`).join('');document.querySelector('#detail').innerHTML=`<div class="detail-body"><div class="summary"><div><h2>${esc(p.title||'Borrador sin título')}</h2><div class="sub">${esc(p.id)} · ${esc(p.opportunity_id)}</div></div><div class="status-box"><span class="label">Estado de propuesta</span><span class="pill ${locked?'complete':''}">${statusLabel(status)}</span></div></div><div class="section"><div class="fields"><div class="field"><span>Patrocinador</span><strong>${esc(p.sponsor||'Pendiente')}</strong></div><div class="field"><span>Plazo de postulación</span><strong>${dateText(p.deadline)}</strong></div><div class="field"><span>Versión actual</span><strong>v${esc(p.version)}</strong></div></div></div><div class="section"><h3>Documentos de la convocatoria</h3><p class="readonly">Solo se aceptan archivos PDF de hasta 10 MB. Se valida nombre, tamaño y marcadores PDF básicos; no confirma que el archivo sea válido o seguro ni analiza su contenido.</p><div class="documents">${documentItems||'<p class="readonly">Esta oportunidad no define documentos requeridos.</p>'}</div>${isPi&&status==='DRAFT'&&!locked?`<div class="submit-row"><span>${missing.length?`Faltan ${missing.length} documentos obligatorios.`:'Documentación obligatoria completa.'}</span><button class="primary" id="submit-proposal" ${missing.length?'disabled':''}>Enviar a revisión de la oficina</button></div>`:''}</div><div class="section"><div class="review-card"><div class="review-top"><h3>Verificación documental</h3>${badge(locked?'COMPLETE':verification.status)}</div><p>Plazo interno de revisión: <b>${dateText(verification.due_date)}</b>${verification.updated_at?` · Actualizada ${new Date(verification.updated_at).toLocaleDateString('es-CO')}`:''}</p>${coordinator&&!locked?`<form class="review-form" id="review-form"><label class="field"><span>Resultado</span><select name="status"><option value="PENDING">Pendiente</option><option value="COMPLETE">Documentación completa</option><option value="CHANGES_REQUIRED">Requiere correcciones</option></select></label><label class="field"><span>Plazo interno</span><input type="date" name="due_date" value="${esc(verification.due_date||'')}" max="${esc(p.deadline||'')}" /></label><label class="field"><span>Observaciones</span><input name="notes" value="${esc(verification.notes||'')}" placeholder="Indica qué documento o parte del resumen debe corregirse y por qué" /></label><button class="primary">Guardar revisión</button></form>`:`<div class="readonly">${verification.notes?`Observaciones: ${esc(verification.notes)}`:'La coordinación asignada establece el plazo interno y realiza la verificación documental.'}</div>`}</div></div><div class="section"><h3>Historial de correcciones y documentos</h3><div class="timeline">${history}</div></div></div>`;addWorkflowProgress({...p,status});addProposalContext(p,verification);addProposalActions({...p,status},verification);document.querySelectorAll('.file-picker input').forEach(input=>input.onchange=()=>{const form=input.closest('.upload-document');const key=`${id}:${form.dataset.requirement}`;if(input.files[0])stagedFiles.set(key,input.files[0]);else stagedFiles.delete(key);input.closest('.file-picker').querySelector('.file-picker-name').textContent=input.files[0]?.name||'Ningún archivo'});for(const form of document.querySelectorAll('.upload-document')){const file=stagedFiles.get(`${id}:${form.dataset.requirement}`);if(file){const transfer=new DataTransfer();transfer.items.add(file);form.elements.file.files=transfer.files;form.querySelector('.file-picker-name').textContent=file.name}}document.querySelectorAll('.upload-document').forEach(form=>form.onsubmit=async e=>{e.preventDefault();const file=form.elements.file.files[0];if(!file)return;const body=new FormData();body.append('file',file);try{await api(`/proposals/${id}/documents/${form.dataset.requirement}`,{method:'POST',body});stagedFiles.delete(`${id}:${form.dataset.requirement}`);toast('Documento validado y almacenado');await showDetail(id)}catch(error){toast(error.message)}});document.querySelectorAll('.download-document').forEach(button=>button.onclick=()=>downloadDocument(id,button.dataset.document,button.dataset.filename));const submit=document.querySelector('#submit-proposal');if(submit)submit.onclick=async()=>{submit.disabled=true;try{await api(`/proposals/${id}/submit`,{method:'POST',body:JSON.stringify({expected_version:p.version})});toast('Propuesta enviada a revisión de la oficina');await load()}catch(error){toast(error.message);submit.disabled=false}};const form=document.querySelector('#review-form');if(form){form.elements.status.value=verification.status;const dueInput=form.elements.due_date;const syncDueRequired=()=>{dueInput.required=['PENDING','CHANGES_REQUIRED'].includes(form.elements.status.value)};syncDueRequired();form.elements.status.onchange=syncDueRequired;form.onsubmit=async e=>{e.preventDefault();const data=new FormData(form);try{await api(`/proposals/${id}/document-verification`,{method:'PUT',body:JSON.stringify({status:data.get('status'),notes:data.get('notes'),due_date:data.get('due_date')||null})});toast('Verificación y plazo guardados en el historial');await load()}catch(error){toast(error.message)}}}}
+    async function downloadDocument(proposalId,documentId,filename){try{const response=await fetch(`/proposals/${proposalId}/documents/${documentId}/download`,{headers:{Authorization:`Bearer ${identity.value}`}});if(!response.ok){const body=await response.json().catch(()=>({}));throw new Error(body.error?.message||'No se pudo descargar el documento')}const blob=await response.blob();const url=URL.createObjectURL(blob);const anchor=document.createElement('a');anchor.href=url;anchor.download=filename;anchor.click();URL.revokeObjectURL(url)}catch(error){toast(error.message)}}
+    function toast(message){const modal=document.querySelector('#create-dialog');const el=document.querySelector(modal.open?'#dialog-toast':'#toast');el.textContent=message;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),3200)}
+    function renderCreateDocuments(opportunity){const el=document.querySelector('#create-document-list');el.innerHTML=(opportunity?.documents||[]).map(d=>`<label class="create-document"><span><strong>${esc(d.name)} <span class="pill pending">Obligatorio en esta convocatoria</span></strong><small>${esc(d.description)} · PDF, máximo ${Math.round(d.max_size_bytes/1024/1024)} MB</small></span><input type="file" name="document-${esc(d.id)}" accept=".pdf,application/pdf"></label>`).join('')}
+    async function openCreate(opportunityId=null){if(identity.value.startsWith('demo-coordinator')){toast('Solo un investigador principal puede crear propuestas');return}try{opportunities=(await api('/opportunities?page=1&page_size=50')).items;const select=document.querySelector('#opportunity-select');select.innerHTML=opportunities.map(o=>`<option value="${esc(o.id)}">${esc(o.title)} · cierra ${dateText(o.deadline)}</option>`).join('');if(!opportunities.length){toast('No hay oportunidades abiertas');return}if(opportunityId)select.value=opportunityId;renderCreateDocuments(opportunities.find(o=>o.id===select.value));select.onchange=()=>renderCreateDocuments(opportunities.find(o=>o.id===select.value));document.querySelector('#dialog-toast').classList.remove('show');document.querySelector('#dialog-toast').textContent='';document.querySelector('#create-dialog').showModal()}catch(err){toast(err.message)}}
+    document.querySelector('#create-form').onsubmit=async e=>{e.preventDefault();const form=e.currentTarget;const data=new FormData(form);const opportunity=opportunities.find(o=>o.id===data.get('opportunity_id'));const action=e.submitter?.value||'save';if(action==='send'){const missing=(opportunity.documents||[]).filter(d=>d.required).filter(d=>!(data.get(`document-${d.id}`) instanceof File)||!data.get(`document-${d.id}`).size);if(missing.length){toast(`Adjunta los documentos obligatorios: ${missing.map(d=>d.name).join(', ')}`);return}}let created=null;try{created=await api('/proposals',{method:'POST',body:JSON.stringify({opportunity_id:opportunity.id,title:data.get('title'),abstract:data.get('abstract')})});for(const requirement of opportunity.documents||[]){const file=data.get(`document-${requirement.id}`);if(file instanceof File&&file.size){const body=new FormData();body.append('file',file);await api(`/proposals/${created.id}/documents/${requirement.id}`,{method:'POST',body})}}if(action==='send'){await api(`/proposals/${created.id}/submit`,{method:'POST',body:JSON.stringify({expected_version:created.version})})}document.querySelector('#create-dialog').close();form.reset();selected=created.id;await load();showPage('proposals');toast(action==='send'?'Propuesta enviada a revisión de la oficina':'Borrador guardado con los documentos seleccionados')}catch(err){if(created){document.querySelector('#create-dialog').close();form.reset();selected=created.id;await load();showPage('proposals');await showDetail(created.id)}toast(err.message)}};
+    identity.onchange=()=>{localStorage.setItem('dh03-demo-token',identity.value);selected=null;load()};document.querySelector('#previous-page').onclick=async()=>{if(opportunityPage>1){opportunityPage--;await load();window.scrollTo({top:0,behavior:'smooth'})}};document.querySelector('#next-page').onclick=async()=>{if(opportunityPage<opportunityTotalPages){opportunityPage++;await load();window.scrollTo({top:0,behavior:'smooth'})}};document.querySelector('#close-dialog').onclick=()=>document.querySelector('#create-dialog').close();document.querySelector('#cancel-create').onclick=()=>document.querySelector('#create-dialog').close();document.querySelector('#tab-opportunities').onclick=()=>showPage('opportunities');document.querySelector('#tab-proposals').onclick=()=>showPage('proposals');document.querySelector('#back-to-calls').onclick=()=>showPage('opportunities');load();
+  </script>
+</body>
+</html>
