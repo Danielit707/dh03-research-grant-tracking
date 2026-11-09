@@ -159,6 +159,15 @@ def test_coordinator_role_cannot_submit_as_a_pi(client, auth):
     assert denied.json()["error"]["code"] == "forbidden"
 
 
+def test_swagger_defines_bearer_authentication(client):
+    schema = client.get("/openapi.json").json()
+
+    assert schema["components"]["securitySchemes"]["HTTPBearer"]["scheme"] == "bearer"
+    assert {
+        "HTTPBearer": []
+    } in schema["paths"]["/proposals"]["post"]["security"]
+
+
 def test_repeated_submission_is_rejected_as_invalid_transition(client, auth, database):
     proposal_id = "proposal-seed-alice"
     first = client.post(

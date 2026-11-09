@@ -12,6 +12,8 @@ This runnable academic increment demonstrates a complete, persisted proposal-sub
 
 The implementation and architecture traceability are described in [docs/architecture-and-traceability.md](docs/architecture-and-traceability.md). The current limitations are listed in [evidence/known-limitations.md](evidence/known-limitations.md).
 
+The timed narration, clean demo database setup, live PowerShell commands, recording checklist, and ZIP packaging steps are in [video-script.md](video-script.md).
+
 ## Prerequisites
 
 - Python 3.11 or newer
@@ -114,6 +116,7 @@ Results and implementation boundaries are maintained in [evidence/](evidence/).
 ```text
 evaluacion-3/
 ├── README.md
+├── video-script.md
 ├── docs/
 ├── src/
 │   ├── database.py
