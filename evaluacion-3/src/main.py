@@ -3,9 +3,10 @@ from datetime import date
 import os
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Header
+from fastapi import Depends, FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from .database import Database
 from .domain import DomainError
@@ -18,6 +19,7 @@ DEMO_TOKEN_SUBJECTS = {
     "demo-pi-bob": "hu-demo-bob",
     "demo-coordinator": "hu-demo-coordinator",
 }
+bearer_scheme = HTTPBearer(auto_error=False)
 
 
 class ProposalInput(BaseModel):
@@ -79,10 +81,10 @@ def create_app(
             content={"error": {"code": error.code, "message": error.message}},
         )
 
-    def current_principal(authorization: str | None = Header(default=None)) -> Principal:
-        scheme, _, token = (authorization or "").partition(" ")
-        if scheme.lower() != "bearer":
-            token = ""
+    def current_principal(
+        credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
+    ) -> Principal:
+        token = credentials.credentials if credentials is not None else ""
         with database.read() as connection:
             return authenticate(connection, token, identity_tokens)
 
